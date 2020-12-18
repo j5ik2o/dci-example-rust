@@ -7,6 +7,7 @@ pub struct BankAccountId(pub(crate) u32);
 #[derive(Debug, Clone, Copy)]
 pub struct UserAccountId(pub(crate) u32);
 
+/// 銀行口座(DCIにおけるデータ部分)
 #[derive(Debug, Clone)]
 pub struct BankAccount {
   id: BankAccountId,
@@ -14,6 +15,7 @@ pub struct BankAccount {
   balance: Money,
 }
 
+/// コンテキストに非依存な振る舞い
 impl BankAccount {
   pub fn new(id: BankAccountId, user_account_id: UserAccountId, balance: Money) -> Self {
     Self {
@@ -38,6 +40,8 @@ impl BankAccount {
   }
 }
 
+/// ロール。
+/// 型の定義だけ。いわゆるDCIにおけるメソッドレスロール。
 mod roles {
   use crate::bank_account::BankAccount;
   use crate::money::{Money, MoneyError};
@@ -55,6 +59,7 @@ mod roles {
   }
 }
 
+/// 送金先のロールの実装。メソッドフルロール。
 impl ReceiveRole for BankAccount {
   fn on_receive(self, money: Money, _from: BankAccount) -> Result<Self, MoneyError>
   where
@@ -65,6 +70,7 @@ impl ReceiveRole for BankAccount {
   }
 }
 
+/// 送金元のロールの実装。メソッドフルロール。
 impl<T: ReceiveRole> SenderRole<T> for BankAccount {
   fn send(self, money: Money, to: T) -> Result<(Self, T), MoneyError>
   where
@@ -76,6 +82,8 @@ impl<T: ReceiveRole> SenderRole<T> for BankAccount {
   }
 }
 
+/// 送金コンテキスト
+/// コンテキストはメソッドレスロールにしか依存しない。
 mod context {
   use super::*;
 
