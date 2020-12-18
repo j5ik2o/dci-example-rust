@@ -143,11 +143,11 @@ impl Money {
   }
 
   pub fn yens_i32(amount: i32) -> Self {
-    Self::yen(Decimal::from_i32(amount).unwrap())
+    Self::yens(Decimal::from_i32(amount).unwrap())
   }
 
   pub fn yens_i64(amount: i64) -> Self {
-    Self::yen(Decimal::from_i64(amount).unwrap())
+    Self::yens(Decimal::from_i64(amount).unwrap())
   }
 
   pub fn zero(currency: CurrencyCode) -> Self {
