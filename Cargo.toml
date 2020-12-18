@@ -1,0 +1,12 @@
+[package]
+name = "dci-example"
+version = "0.0.1"
+authors = ["Junichi Kato <j5ik2o@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rust_decimal = "1.8.1"
+iso-4217 = "0.1"
+chrono = "0.4"
