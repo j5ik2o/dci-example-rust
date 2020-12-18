@@ -40,18 +40,19 @@ impl BankAccount {
   }
 }
 
-/// ロール。
-/// 型の定義だけ。いわゆるDCIにおけるメソッドレスロール。
+/// ロールの型。
 mod roles {
   use crate::bank_account::BankAccount;
   use crate::money::{Money, MoneyError};
 
+  /// 送金先のロール。
   pub trait ReceiveRole {
     fn on_receive(self, money: Money, from: BankAccount) -> Result<Self, MoneyError>
     where
       Self: Sized;
   }
 
+  /// 送金元のロール。
   pub trait SenderRole<T> {
     fn send(self, money: Money, to: T) -> Result<(Self, T), MoneyError>
     where
@@ -59,11 +60,12 @@ mod roles {
   }
 }
 
-mod role_impl {
+/// ロールの実装。
+mod roles_impl {
   use crate::bank_account::roles::{ReceiveRole, SenderRole};
   use crate::{BankAccount, Money, MoneyError};
 
-  /// 送金先のロールの実装。メソッドフルロール。
+  /// 送金先のロール。
   impl ReceiveRole for BankAccount {
     fn on_receive(self, money: Money, _from: BankAccount) -> Result<Self, MoneyError>
     where
@@ -74,7 +76,7 @@ mod role_impl {
     }
   }
 
-  /// 送金元のロールの実装。メソッドフルロール。
+  /// 送金元のロール。
   impl<T: ReceiveRole> SenderRole<T> for BankAccount {
     fn send(self, money: Money, to: T) -> Result<(Self, T), MoneyError>
     where
